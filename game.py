@@ -1,11 +1,10 @@
-from board import Board
-from player import PlayerMM, PlayerAB, ManualPlayer
+from board import Board, GameResult
+from player import Player
+
 
 class Game:
-
-
-    def __init__(self, startBoard, player1, player2):
-        self.startBoard = startBoard
+    def __init__(self, start_board: Board, player1: Player, player2: Player):
+        self.start_board = start_board
         self.player1 = player1
         self.player2 = player2
 
@@ -14,38 +13,17 @@ class Game:
     ########################################################################
 
     def simulateLocalGame(self):
-
-        board = Board(orig=self.startBoard)
-        isPlayer1 = True
-
-        while(True):
-
-            #finds the move to make
-            if isPlayer1:
-                move = self.player1.findMove(board)
-            else:
-                move = self.player2.findMove(board)
-
-            #makes the move
+        board = Board(orig=self.start_board)
+        is_player_1 = True
+        game_result = board.isTerminal()
+        while board.isTerminal() == GameResult.ONGOING:
+            # make move
+            move = self.player1.findMove(board) if is_player_1 else self.player2.findMove(board)
             board.makeMove(move)
-            board.print()
+            # board.print()
 
-            #determines if the game is over or not
-            isOver = board.isTerminal()
-            if isOver == 0:
-                print("It is a draw!")
-                break
-            elif isOver == 1:
-                print("Player 1 wins!")
-                break
-            elif isOver == 2:
-                print("Player 2 wins!")
-                break
-            else:
-                isPlayer1 = not isPlayer1
+            # determines if the game is over or not
+            game_result = board.isTerminal()
+            is_player_1 = not is_player_1
 
-
-
-if __name__ == "__main__":
-    game = Game(Board(), PlayerAB(5, True), PlayerAB(5, False))
-    game.simulateLocalGame()
+        return game_result, board.numMoves

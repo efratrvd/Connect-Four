@@ -9,23 +9,32 @@
 # Every cell in the above list contains either a 0 or a 1. Player 1 is represented by 0 tiles, and Player
 
 ##############################################################################
-class Board(object):
+from enum import Enum
 
-    #static class variables - shared across all instances
+
+class GameResult(Enum):
+    TIE = 0
+    PLAYER_ONE = 1
+    PLAYER_TWO = 2
+    ONGOING = -1
+
+
+class Board(object):
+    # static class variables - shared across all instances
     HEIGHT = 6
     WIDTH = 7
 
     def __init__(self, orig=None, hash=None):
 
         # copy
-        if(orig):
+        if (orig):
             self.board = [list(col) for col in orig.board]
             self.numMoves = orig.numMoves
             self.lastMove = orig.lastMove
             return
 
         # creates from hash - NOTE: Does not understand move order
-        elif(hash):
+        elif (hash):
             self.board = []
             self.numMoves = 0
             self.lastMove = None
@@ -37,14 +46,14 @@ class Board(object):
                 hash //= 3
 
             col = []
-            
+
             for item in digits:
-                
+
                 # 2 indicates new column
                 if item == 2:
                     self.board.append(col)
                     col = []
-                
+
                 # otherwise directly append base number
                 else:
                     col.append(item)
@@ -58,7 +67,6 @@ class Board(object):
             self.lastMove = None
             return
 
-
     ########################################################################
     #                           Mutations
     ########################################################################
@@ -71,7 +79,6 @@ class Board(object):
         self.lastMove = (piece, column)
         self.numMoves += 1
         self.board[column].append(piece)
-
 
     ########################################################################
     #                           Observations
@@ -94,34 +101,36 @@ class Board(object):
     #   1 if player 1 wins
     #   2 if player 2 wins
     def isTerminal(self):
-        for i in range(0,self.WIDTH):
-            for j in range(0,self.HEIGHT):
+        for i in range(0, self.WIDTH):
+            for j in range(0, self.HEIGHT):
                 try:
-                    if self.board[i][j]  == self.board[i+1][j] == self.board[i+2][j] == self.board[i+3][j]:
+                    if self.board[i][j] == self.board[i + 1][j] == self.board[i + 2][j] == self.board[i + 3][j]:
                         return self.board[i][j] + 1
                 except IndexError:
                     pass
 
                 try:
-                    if self.board[i][j]  == self.board[i][j+1] == self.board[i][j+2] == self.board[i][j+3]:
+                    if self.board[i][j] == self.board[i][j + 1] == self.board[i][j + 2] == self.board[i][j + 3]:
                         return self.board[i][j] + 1
                 except IndexError:
                     pass
 
                 try:
-                    if not j + 3 > self.HEIGHT and self.board[i][j] == self.board[i+1][j + 1] == self.board[i+2][j + 2] == self.board[i+3][j + 3]:
+                    if not j + 3 > self.HEIGHT and self.board[i][j] == self.board[i + 1][j + 1] == self.board[i + 2][
+                        j + 2] == self.board[i + 3][j + 3]:
                         return self.board[i][j] + 1
                 except IndexError:
                     pass
 
                 try:
-                    if not j - 3 < 0 and self.board[i][j] == self.board[i+1][j - 1] == self.board[i+2][j - 2] == self.board[i+3][j - 3]:
+                    if not j - 3 < 0 and self.board[i][j] == self.board[i + 1][j - 1] == self.board[i + 2][j - 2] == \
+                            self.board[i + 3][j - 3]:
                         return self.board[i][j] + 1
                 except IndexError:
                     pass
         if self.isFull():
-            return 0
-        return -1
+            return GameResult.TIE
+        return GameResult.ONGOING
 
     # Returns a unique decimal number for each board object based on the
     # underlying data
@@ -167,7 +176,3 @@ class Board(object):
             print("+" + "---+" * self.WIDTH)
         print(self.lastMove[1])
         print(self.numMoves)
-
-
-
-
