@@ -10,6 +10,9 @@ class Player:
 
         self.isPlayerOne = isPlayerOne
         self.depthLimit = depthLimit
+        self.two_streak = 99
+        self.three_streak = 999
+        self.four_streak = 99999
 
     # Returns a heuristic for the board position
     # Good positions for 0 pieces are positive and good positions for 1 pieces
@@ -23,19 +26,19 @@ class Player:
                 try:
                     # add player one streak scores to heur
                     if state[i][j] == state[i + 1][j] == 0:
-                        heur += 10
+                        heur += self.two_streak
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == 0:
-                        heur += 100
+                        heur += self.three_streak
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == state[i + 3][j] == 0:
-                        heur += 10000
+                        heur += self.four_streak
 
                     # subtract player two streak score to heur
                     if state[i][j] == state[i + 1][j] == 1:
-                        heur -= 10
+                        heur -= self.two_streak
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == 1:
-                        heur -= 100
+                        heur -= self.three_streak
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == state[i + 3][j] == 1:
-                        heur -= 1000000
+                        heur -= self.four_streak
                 except IndexError:
                     pass
 
@@ -43,19 +46,19 @@ class Player:
                 try:
                     # add player one vertical streaks to heur
                     if state[i][j] == state[i][j + 1] == 0:
-                        heur += 10
+                        heur += self.two_streak
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == 0:
-                        heur += 100
+                        heur += self.three_streak
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == state[i][j + 3] == 0:
-                        heur += 10000
+                        heur += self.four_streak
 
                     # subtract player two streaks from heur
                     if state[i][j] == state[i][j + 1] == 1:
-                        heur -= 10
+                        heur -= self.two_streak
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == 1:
-                        heur -= 100
+                        heur -= self.three_streak
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == state[i][j + 3] == 1:
-                        heur -= 1000000
+                        heur -= self.four_streak
                 except IndexError:
                     pass
 
@@ -63,21 +66,21 @@ class Player:
                 try:
                     # add player one streaks to heur
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == 0:
-                        heur += 100
+                        heur += self.two_streak
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] == 0:
-                        heur += 100
+                        heur += self.three_streak
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] \
                             == state[i + 3][j + 3] == 0:
-                        heur += 10000
+                        heur += self.four_streak
 
                     # add player two streaks to heur
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == 1:
-                        heur -= 100
+                        heur -= self.two_streak
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] == 1:
-                        heur -= 100
+                        heur -= self.three_streak
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] \
                             == state[i + 3][j + 3] == 1:
-                        heur -= 1000000
+                        heur -= self.four_streak
                 except IndexError:
                     pass
 
@@ -85,21 +88,21 @@ class Player:
                 try:
                     # add  player one streaks
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == 0:
-                        heur += 10
+                        heur += self.two_streak
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] == 0:
-                        heur += 100
+                        heur += self.three_streak
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] \
                             == state[i + 3][j - 3] == 0:
-                        heur += 10000
+                        heur += self.four_streak
 
                     # subtract player two streaks
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == 1:
-                        heur -= 10
+                        heur -= self.two_streak
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] == 1:
-                        heur -= 100
+                        heur -= self.three_streak
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] \
                             == state[i + 3][j - 3] == 1:
-                        heur -= 1000000
+                        heur -= self.four_streak
                 except IndexError:
                     pass
         return heur
@@ -200,7 +203,7 @@ class PlayerBFMM(Player):
     # returns the optimal column to move in by implementing the Best-First MiniMax algorithm
     def findMove(self, board):
         play_function = self.bf_max if self.isPlayerOne else self.bf_min
-        score, move = play_function(board, self.depthLimit, -math.inf, math.inf)
+        score, move, _ = play_function(board, self.depthLimit, -math.inf, math.inf)
         print(self.isPlayerOne, "move made", move)
         return move
 
@@ -214,19 +217,20 @@ class PlayerBFMM(Player):
     def bf_max(self, board, depth, alpha, beta):
         # case - the next node to expand is not on this principle branch
         # print('getting_children - max')
+        is_max_depth = False
         children = board.children()
         children_values = []
         for child in children:
             move, child_board = child
             value = self.heuristic(child_board)
             if value > beta:
-                return value, move
+                return value, move, False
             children_values.append(value)
 
         if board.isTerminal() == GameResult.TIE:
-            return -math.inf, -1
+            return -math.inf, -1, True
         elif depth == 0:
-            return self.heuristic(board), -1
+            return self.heuristic(board), -1, True
 
         if len(children) == 1:
             children.append(None)
@@ -238,20 +242,20 @@ class PlayerBFMM(Player):
         while alpha <= best_score and best_score <= beta:
             previous_move, child_board = best_child
             second_best_value, _ = sorted_children[1]
-            value, move = self.bf_min(child_board, depth - 1, max(alpha, second_best_value), beta)
+            value, move, is_max_depth = self.bf_min(child_board, depth - 1, max(alpha, second_best_value), beta)
 
             self._replace_value(sorted_children, value, previous_move, best_child)
             sorted_children = sorted(sorted_children, key=lambda t: t[0], reverse=True)
             best_score, best_child = first(sorted_children, default=(-math.inf, -1))
-            if move == -1:
+            if is_max_depth:
                 break
 
         best_move, _ = best_child
 
-        return best_score, best_move
+        return best_score, best_move, is_max_depth
 
     def bf_min(self, board, depth, alpha, beta):
-
+        is_max_depth = False
         # print('getting_children - min')
         children = board.children()
         children_values = []
@@ -259,17 +263,17 @@ class PlayerBFMM(Player):
             move, child_board = child
             value = self.heuristic(child_board)
             if value < alpha:
-                return value, move
+                return value, move, False
             children_values.append(value)
 
         if board.isTerminal() == GameResult.TIE:
-            return math.inf, -1
+            return math.inf, -1, True
         elif depth == 0:
-            return self.heuristic(board), -1
+            return self.heuristic(board), -1, True
 
         if len(children) == 1:
             children.append(None)
-            children_values.append(-math.inf)
+            children_values.append(math.inf)
 
         # print('got children values - min')
         sorted_children = sorted(zip(children_values, children), key=lambda t: t[0])
@@ -277,13 +281,13 @@ class PlayerBFMM(Player):
         while alpha <= best_score and best_score <= beta:
             previous_move, child_board = best_child
             second_best_value, _ = sorted_children[1]
-            value, move = self.bf_max(child_board, depth - 1, alpha, min(beta, second_best_value))
+            value, move, is_max_depth= self.bf_max(child_board, depth - 1, alpha, min(beta, second_best_value))
 
             self._replace_value(sorted_children, value, previous_move, best_child)
             sorted_children = sorted(sorted_children, key=lambda t: t[0])
             best_score, best_child = first(sorted_children, default=(math.inf, -1))
-            if move == -1:
+            if is_max_depth:
                 break
 
         best_move, _ = best_child
-        return best_score, best_move
+        return best_score, best_move, is_max_depth

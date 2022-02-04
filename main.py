@@ -26,8 +26,8 @@ def simulate_games(first_player_class, second_player_class):
 
 
 def run_game():
-    player_1 = PlayerBFMM(2, isPlayerOne=True)
-    player_2 = PlayerAB(3, isPlayerOne=False)
+    player_1 = PlayerBFMM(1, isPlayerOne=True)
+    player_2 = PlayerBFMM(7, isPlayerOne=False)
 
     game = Game(Board(), player_1, player_2)
     winner, num_moves = game.simulateLocalGame()
