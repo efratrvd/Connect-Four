@@ -13,6 +13,7 @@ class Player:
         self.two_streak = 99
         self.three_streak = 999
         self.four_streak = 99999
+        self.num_nodes_generated = 0
 
     # Returns a heuristic for the board position
     # Good positions for 0 pieces are positive and good positions for 1 pieces
@@ -204,7 +205,7 @@ class PlayerBFMM(Player):
     def findMove(self, board):
         play_function = self.bf_max if self.isPlayerOne else self.bf_min
         score, move, _ = play_function(board, self.depthLimit, -math.inf, math.inf)
-        print(self.isPlayerOne, "move made", move)
+        # print(self.isPlayerOne, "move made", move)
         return move
 
     def _replace_value(self, children, value, move, best_child):
@@ -221,6 +222,7 @@ class PlayerBFMM(Player):
         children = board.children()
         children_values = []
         for child in children:
+            self.num_nodes_generated += 1
             move, child_board = child
             value = self.heuristic(child_board)
             if value > beta:
@@ -229,6 +231,10 @@ class PlayerBFMM(Player):
 
         if board.isTerminal() == GameResult.TIE:
             return -math.inf, -1, True
+        elif board.isTerminal() == GameResult.PLAYER_TWO.value:
+            return -math.inf, -1, True
+        elif board.isTerminal() == GameResult.PLAYER_ONE.value:
+            return math.inf, -1, True
         elif depth == 0:
             return self.heuristic(board), -1, True
 
@@ -260,6 +266,7 @@ class PlayerBFMM(Player):
         children = board.children()
         children_values = []
         for child in children:
+            self.num_nodes_generated += 1
             move, child_board = child
             value = self.heuristic(child_board)
             if value < alpha:
@@ -268,6 +275,10 @@ class PlayerBFMM(Player):
 
         if board.isTerminal() == GameResult.TIE:
             return math.inf, -1, True
+        elif board.isTerminal() == GameResult.PLAYER_ONE.value:
+            return math.inf, -1, True
+        elif board.isTerminal() == GameResult.PLAYER_TWO.value:
+            return -math.inf, -1, True
         elif depth == 0:
             return self.heuristic(board), -1, True
 
