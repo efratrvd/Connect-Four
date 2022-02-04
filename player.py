@@ -35,7 +35,7 @@ class Player:
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == 1:
                         heur -= 100
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == state[i + 3][j] == 1:
-                        heur -= 10000
+                        heur -= 1000000
                 except IndexError:
                     pass
 
@@ -55,7 +55,7 @@ class Player:
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == 1:
                         heur -= 100
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == state[i][j + 3] == 1:
-                        heur -= 10000
+                        heur -= 1000000
                 except IndexError:
                     pass
 
@@ -77,7 +77,7 @@ class Player:
                         heur -= 100
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] \
                             == state[i + 3][j + 3] == 1:
-                        heur -= 10000
+                        heur -= 1000000
                 except IndexError:
                     pass
 
@@ -99,7 +99,7 @@ class Player:
                         heur -= 100
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] \
                             == state[i + 3][j - 3] == 1:
-                        heur -= 10000
+                        heur -= 1000000
                 except IndexError:
                     pass
         return heur
@@ -212,12 +212,8 @@ class PlayerBFMM(Player):
                 break
 
     def bf_max(self, board, depth, alpha, beta):
-        if board.isTerminal() == GameResult.TIE:
-            return -math.inf, -1
-        elif depth == 0:
-            return self.heuristic(board), -1
-
-        print('getting_children - max')
+        # case - the next node to expand is not on this principle branch
+        # print('getting_children - max')
         children = board.children()
         children_values = []
         for child in children:
@@ -227,11 +223,16 @@ class PlayerBFMM(Player):
                 return value, move
             children_values.append(value)
 
+        if board.isTerminal() == GameResult.TIE:
+            return -math.inf, -1
+        elif depth == 0:
+            return self.heuristic(board), -1
+
         if len(children) == 1:
             children.append(None)
             children_values.append(-math.inf)
 
-        print('got children values - max')
+        # print('got children values - max')
         sorted_children = sorted(zip(children_values, children), key=lambda t: t[0], reverse=True)
         best_score, best_child = first(sorted_children, default=(-math.inf, -1))
         while alpha <= best_score and best_score <= beta:
@@ -246,15 +247,12 @@ class PlayerBFMM(Player):
                 break
 
         best_move, _ = best_child
+
         return best_score, best_move
 
     def bf_min(self, board, depth, alpha, beta):
-        if board.isTerminal() == GameResult.TIE:
-            return math.inf, -1
-        elif depth == 0:
-            return self.heuristic(board), -1
 
-        print('getting_children - min')
+        # print('getting_children - min')
         children = board.children()
         children_values = []
         for child in children:
@@ -264,11 +262,16 @@ class PlayerBFMM(Player):
                 return value, move
             children_values.append(value)
 
+        if board.isTerminal() == GameResult.TIE:
+            return math.inf, -1
+        elif depth == 0:
+            return self.heuristic(board), -1
+
         if len(children) == 1:
             children.append(None)
             children_values.append(-math.inf)
 
-        print('got children values - min')
+        # print('got children values - min')
         sorted_children = sorted(zip(children_values, children), key=lambda t: t[0])
         best_score, best_child = first(sorted_children, default=(math.inf, -1))
         while alpha <= best_score and best_score <= beta:

@@ -20,7 +20,7 @@ class Game:
             # make move
             move = self.player1.findMove(board) if is_player_1 else self.player2.findMove(board)
             board.makeMove(move)
-            # board.print()
+            board.print()
 
             # determines if the game is over or not
             game_result = board.isTerminal()
