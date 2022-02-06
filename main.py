@@ -8,10 +8,11 @@ from player import PlayerAB, PlayerMM, PlayerBFMM
 
 def simulate_games(first_player_class, second_player_class):
     depths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    depths = [1, 2, 3, 4, 5, 6, 7]
 
     results = []
     for player_1_depth in tqdm(depths):
-        for player_2_depth in depths:
+        for player_2_depth in tqdm(depths):
             player_1 = first_player_class(player_1_depth, True)
             player_2 = second_player_class(player_2_depth, False)
 
@@ -48,6 +49,5 @@ if __name__ == "__main__":
     for player_1_type in player_types:
         for player_2_type in player_types:
             results += simulate_games(player_1_type, player_2_type)
-
-    results_df = json_normalize(results)
-    results_df.to_csv('game_simulation_results.csv')
+            results_df = json_normalize(results)
+            results_df.to_csv('game_simulation_results.csv')
