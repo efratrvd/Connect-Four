@@ -25,19 +25,18 @@ class Player:
             for j in range(0, board.HEIGHT):
                 # check horizontal streaks
                 try:
-                    # add player one streak scores to heur
-                    if state[i][j] == state[i + 1][j] == 0:
+                    if state[i][j] == state[i + 1][j] == 0:  # add player one streak scores to heur
                         heur += self.two_streak
+                    if state[i][j] == state[i + 1][j] == 1:  # subtract player two streak score to heur
+                        heur -= self.two_streak
+
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == 0:
                         heur += self.three_streak
-                    if state[i][j] == state[i + 1][j] == state[i + 2][j] == state[i + 3][j] == 0:
-                        heur += self.four_streak
-
-                    # subtract player two streak score to heur
-                    if state[i][j] == state[i + 1][j] == 1:
-                        heur -= self.two_streak
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == 1:
                         heur -= self.three_streak
+
+                    if state[i][j] == state[i + 1][j] == state[i + 2][j] == state[i + 3][j] == 0:
+                        heur += self.four_streak
                     if state[i][j] == state[i + 1][j] == state[i + 2][j] == state[i + 3][j] == 1:
                         heur -= self.four_streak
                 except IndexError:
@@ -45,19 +44,18 @@ class Player:
 
                 # check vertical streaks
                 try:
-                    # add player one vertical streaks to heur
-                    if state[i][j] == state[i][j + 1] == 0:
+                    if state[i][j] == state[i][j + 1] == 0:  # add player one vertical streaks to heur
                         heur += self.two_streak
+                    if state[i][j] == state[i][j + 1] == 1:  # subtract player two streaks from heur
+                        heur -= self.two_streak
+
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == 0:
                         heur += self.three_streak
-                    if state[i][j] == state[i][j + 1] == state[i][j + 2] == state[i][j + 3] == 0:
-                        heur += self.four_streak
-
-                    # subtract player two streaks from heur
-                    if state[i][j] == state[i][j + 1] == 1:
-                        heur -= self.two_streak
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == 1:
                         heur -= self.three_streak
+
+                    if state[i][j] == state[i][j + 1] == state[i][j + 2] == state[i][j + 3] == 0:
+                        heur += self.four_streak
                     if state[i][j] == state[i][j + 1] == state[i][j + 2] == state[i][j + 3] == 1:
                         heur -= self.four_streak
                 except IndexError:
@@ -65,20 +63,19 @@ class Player:
 
                 # check positive diagonal streaks
                 try:
-                    # add player one streaks to heur
-                    if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == 0:
+                    if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == 0:  # add player one streaks to heur
                         heur += self.two_streak
+                    if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == 1:  # add player two streaks to heur
+                        heur -= self.two_streak
+
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] == 0:
                         heur += self.three_streak
+                    if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] == 1:
+                        heur -= self.three_streak
+
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] \
                             == state[i + 3][j + 3] == 0:
                         heur += self.four_streak
-
-                    # add player two streaks to heur
-                    if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == 1:
-                        heur -= self.two_streak
-                    if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] == 1:
-                        heur -= self.three_streak
                     if not j + 3 > board.HEIGHT and state[i][j] == state[i + 1][j + 1] == state[i + 2][j + 2] \
                             == state[i + 3][j + 3] == 1:
                         heur -= self.four_streak
@@ -87,22 +84,19 @@ class Player:
 
                 # check negative diagonal streaks
                 try:
-                    # add  player one streaks
-                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == 0:
+                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == 0: # add  player one streaks
                         heur += self.two_streak
+                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == 1: # subtract player two streaks
+                        heur -= self.two_streak
+
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] == 0:
                         heur += self.three_streak
-                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] \
-                            == state[i + 3][j - 3] == 0:
-                        heur += self.four_streak
-
-                    # subtract player two streaks
-                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == 1:
-                        heur -= self.two_streak
                     if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] == 1:
                         heur -= self.three_streak
-                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] \
-                            == state[i + 3][j - 3] == 1:
+
+                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] == state[i + 3][j - 3] == 0:
+                        heur += self.four_streak
+                    if not j - 3 < 0 and state[i][j] == state[i + 1][j - 1] == state[i + 2][j - 2] == state[i + 3][j - 3] == 1:
                         heur -= self.four_streak
                 except IndexError:
                     pass
@@ -292,7 +286,7 @@ class PlayerBFMM(Player):
         while alpha <= best_score and best_score <= beta:
             previous_move, child_board = best_child
             second_best_value, _ = sorted_children[1]
-            value, move, is_max_depth= self.bf_max(child_board, depth - 1, alpha, min(beta, second_best_value))
+            value, move, is_max_depth = self.bf_max(child_board, depth - 1, alpha, min(beta, second_best_value))
 
             self._replace_value(sorted_children, value, previous_move, best_child)
             sorted_children = sorted(sorted_children, key=lambda t: t[0])
