@@ -130,6 +130,7 @@ class PlayerMM(Player):
         best_move = -1
         children = board.children()
         for child in children:
+            self.num_nodes_generated += 1
             move, childboard = child
             temp_best_score = self.miniMax(childboard, depth - 1, not player)[0]
             if shouldReplace(temp_best_score):
@@ -165,6 +166,7 @@ class PlayerAB(Player):
 
         children = board.children()
         for child in children:
+            self.num_nodes_generated += 1
             move, childboard = child
             temp = self.alphaBeta(childboard, depth - 1, not player, alpha, beta)[0]
             if shouldReplace(temp):
