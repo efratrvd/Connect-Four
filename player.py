@@ -217,14 +217,6 @@ class PlayerBFMM(Player):
         is_max_depth = False
         children = board.children()
         children_values = []
-        for child in children:
-            self.num_nodes_generated += 1
-            move, child_board = child
-            value = self.heuristic(child_board)
-            if value > beta:
-                return value, move, False
-            children_values.append(value)
-
         if board.isTerminal() == GameResult.TIE:
             return -math.inf, -1, True
         elif board.isTerminal() == GameResult.PLAYER_TWO.value:
@@ -233,6 +225,16 @@ class PlayerBFMM(Player):
             return math.inf, -1, True
         elif depth == 0:
             return self.heuristic(board), -1, True
+
+        for child in children:
+            self.num_nodes_generated += 1
+            move, child_board = child
+            value = self.heuristic(child_board)
+            if value > beta:
+                return value, move, False
+            children_values.append(value)
+
+
 
         if len(children) == 1:
             children.append(None)
@@ -261,13 +263,6 @@ class PlayerBFMM(Player):
         # print('getting_children - min')
         children = board.children()
         children_values = []
-        for child in children:
-            self.num_nodes_generated += 1
-            move, child_board = child
-            value = self.heuristic(child_board)
-            if value < alpha:
-                return value, move, False
-            children_values.append(value)
 
         if board.isTerminal() == GameResult.TIE:
             return math.inf, -1, True
@@ -277,6 +272,16 @@ class PlayerBFMM(Player):
             return -math.inf, -1, True
         elif depth == 0:
             return self.heuristic(board), -1, True
+
+        for child in children:
+            self.num_nodes_generated += 1
+            move, child_board = child
+            value = self.heuristic(child_board)
+            if value < alpha:
+                return value, move, False
+            children_values.append(value)
+
+
 
         if len(children) == 1:
             children.append(None)

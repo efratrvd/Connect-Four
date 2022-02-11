@@ -88,11 +88,12 @@ class Board(object):
     # A child is of the form (move_to_make_child, child_object)
     def children(self):
         children = []
-        for i in range(7):
-            if len(self.board[i]) < 6:
-                child = Board(self)
-                child.makeMove(i)
-                children.append((i, child))
+        if (self.isTerminal() == GameResult.ONGOING):
+            for i in range(7):
+                if len(self.board[i]) < 6:
+                    child = Board(self)
+                    child.makeMove(i)
+                    children.append((i, child))
         return children
 
     # Returns:

@@ -27,7 +27,6 @@ class Game:
             move_time_sec = (datetime.datetime.now() - time1).total_seconds()
             player1_times.append(move_time_sec) if is_player_1 else player2_times.append(move_time_sec)
             board.makeMove(move)
-
             # determines if the game is over or not
             game_result = board.isTerminal()
             is_player_1 = not is_player_1
